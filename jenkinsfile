@@ -1,0 +1,60 @@
+pipeline{
+agent any
+tools{
+ maven 'mvn'
+ jdk 'jdk-17'
+}
+stages{
+ stage('This is git cloning stage'){
+  steps{
+   git branch: 'master', url:'https://github.com/aws4hjn/Maven-project.git'
+ }
+ }
+ stage("This is maven build stage"){
+ steps{
+ sh 'mvn clean package'
+ }
+ }
+ stage('This is image build stage'){
+ steps{
+  sh 'docker build -t jenimage .'
+ }
+ }
+ stage('This is container creation stage'){
+ steps{
+ sh 'docker run -it -d --name nagusC2 -p 8081:8080 jenimage'
+ }
+ }
+ stage('This is docker login stage'){
+ steps{
+ script{
+withCredentials([usernamePassword(credentialsId: 'aws4hjn', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+  sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+}
+ }
+ }
+ }
+ stage('This is push to the  dockerhub'){
+ steps{
+ sh '''
+ docker tag jenimage  aws4hjn/nagsimage:V1
+ docker push aws4hjn/nagsimage:V1
+ '''
+ 
+ }
+ }
+stage("This is image psh to the aws container registory"){
+ steps{
+ script{
+ withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscontainer', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+  sh '''
+  aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 912894834284.dkr.ecr.ap-southeast-1.amazonaws.com
+  docker tag jenimage 912894834284.dkr.ecr.ap-southeast-1.amazonaws.com/nagus:V2
+  docker push 912894834284.dkr.ecr.ap-southeast-1.amazonaws.com/nagus:V2
+  '''
+}
+ }
+ }
+ }
+}
+}
