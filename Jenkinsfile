@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build & Package') {
             steps {
-                sh 'mvn clean package'          // creates target/*.war
+                bat 'mvn clean package'          // creates target/*.war
             }
         }
 
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 // Simple copy: Jenkins and Tomcat on the SAME machine.
                 // Tomcat auto-deploys any WAR dropped into webapps/.
-                sh 'cp target/*.war /opt/tomcat/webapps/myapp.war'
+                bat 'C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps'
             }
         }
     }
