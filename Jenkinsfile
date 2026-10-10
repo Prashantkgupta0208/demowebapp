@@ -2,8 +2,8 @@ pipeline {
     agent any                       // run on any available Jenkins node
 
     tools {                         // names must match Manage Jenkins > Tools
-        maven 'Maven-3.9.16'
-        jdk   'JDK-25'
+        maven 'MAVEN_HOME'
+        jdk   'JAVA_HOME'
     }
 
     stages {
