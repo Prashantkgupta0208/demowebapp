@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven-3.9.16'     // keep the names that already work for you
-        jdk   'JDK-25'
+        maven 'MAVEN'     // keep the names that already work for you
+        jdk   'JAVA_HOME'
     }
 
     stages {
