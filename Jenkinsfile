@@ -2,7 +2,7 @@ pipeline {
     agent any                       // run on any available Jenkins node
 
     tools {                         // names must match Manage Jenkins > Tools
-        maven 'MAVEN_HOME'
+        maven 'MAVEN'
         jdk   'JAVA_HOME'
     }
 
